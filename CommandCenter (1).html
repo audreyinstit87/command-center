@@ -4,583 +4,518 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assistant Pédagogique — Command Center</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400;1,500&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #F7F5F0;
-    --surface: #FFFFFF;
-    --surface2: #F0EDE8;
-    --border: rgba(0,0,0,0.08);
-    --border2: rgba(0,0,0,0.14);
-    --text: #1A1714;
-    --text2: #6B6560;
-    --text3: #A09890;
-    --purple: #6B5CE7;
-    --purple-light: #EEEDFE;
-    --purple-dark: #4A3FB5;
-    --green: #3B9B5A;
-    --green-light: #E6F5EC;
-    --orange: #C47B1A;
-    --orange-light: #FDF0DC;
-    --red: #C43B3B;
-    --red-light: #FDEAEA;
-    --teal: #1A8A7A;
-    --teal-light: #E0F5F2;
-    --radius: 14px;
-    --radius-sm: 8px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Comic Neue', Georgia, serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* TOPBAR */
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .topbar-left { display: flex; align-items: center; gap: 14px; }
-
-  .logo-mark {
-    width: 38px; height: 38px;
-    background: var(--purple);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 18px; font-weight: 600; color: white;
-  }
-
-  .app-title {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 17px; font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-  .app-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
-
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-
-  .bulletin-pill {
-    font-size: 12px; font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 99px;
-    background: var(--orange-light);
-    color: var(--orange);
-    border: 1px solid rgba(196,123,26,0.2);
-    font-family: 'Baloo 2', sans-serif;
-  }
-
-  .date-pill {
-    font-size: 12px;
-    color: var(--text2);
-    padding: 5px 12px;
-    background: var(--surface2);
-    border-radius: 99px;
-  }
-
-  .avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--purple-light);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 13px; font-weight: 600; color: var(--purple);
-    border: 2px solid white;
-  }
-
-  /* NAV */
-  .nav {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    padding: 0 24px;
-    gap: 4px;
-  }
-
-  .nav-tab {
-    padding: 12px 20px;
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 13px; font-weight: 500;
-    color: var(--text2);
-    cursor: pointer;
-    border-bottom: 2.5px solid transparent;
-    transition: all 0.18s;
-    display: flex; align-items: center; gap: 7px;
-    white-space: nowrap;
-  }
-  .nav-tab:hover { color: var(--text); background: var(--bg); }
-  .nav-tab.active { color: var(--purple); border-bottom-color: var(--purple); }
-  .nav-icon { font-size: 15px; }
-
-  /* MAIN */
-  .main { padding: 20px 24px; max-width: 1100px; margin: 0 auto; }
-
-  .panel { display: none; }
-  .panel.active { display: block; animation: fadeIn 0.2s ease; }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-  .section-label {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 11px; font-weight: 600;
-    color: var(--text3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  /* GRID */
-  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
-  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
-  .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
-
-  /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    box-shadow: var(--shadow);
-  }
-
-  .stat-card {
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-  }
-  .stat-num { font-family: 'Baloo 2', sans-serif; font-size: 28px; font-weight: 600; line-height: 1; }
-  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 4px; }
-
-  /* MATIÈRES */
-  .mat-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .mat-row:last-child { border-bottom: none; }
-  .mat-name { font-size: 13px; color: var(--text); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .bar-wrap { flex: 1; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-  .bar { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
-  .bar-ok { background: var(--green); }
-  .bar-warn { background: var(--orange); }
-  .bar-danger { background: var(--red); }
-  .score-txt { font-size: 11px; color: var(--text2); width: 28px; text-align: right; flex-shrink: 0; font-family: 'Baloo 2', sans-serif; }
-  .badge { font-size: 10px; font-weight: 700; font-family: 'Baloo 2', sans-serif; padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
-  .b-ok { background: var(--green-light); color: var(--green); }
-  .b-warn { background: var(--orange-light); color: var(--orange); }
-  .b-danger { background: var(--red-light); color: var(--red); }
-
-  /* ALERTES */
-  .alert-row {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 8px;
-    border: 1px solid transparent;
-  }
-  .al-danger { background: var(--red-light); border-color: rgba(196,59,59,0.15); }
-  .al-warn { background: var(--orange-light); border-color: rgba(196,123,26,0.15); }
-  .al-ok { background: var(--green-light); border-color: rgba(59,155,90,0.15); }
-  .al-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-  .al-danger .al-dot { background: var(--red); }
-  .al-warn .al-dot { background: var(--orange); }
-  .al-ok .al-dot { background: var(--green); }
-  .al-content { flex: 1; }
-  .al-title { font-size: 13px; font-weight: 700; font-family: 'Baloo 2', sans-serif; }
-  .al-danger .al-title { color: var(--red); }
-  .al-warn .al-title { color: var(--orange); }
-  .al-ok .al-title { color: var(--green); }
-  .al-sub { font-size: 12px; margin-top: 2px; color: var(--text2); }
-
-  /* ÉLÈVES */
-  .eleve-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .eleve-row:last-child { border-bottom: none; }
-  .av {
-    width: 36px; height: 36px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; font-family: 'Baloo 2', sans-serif;
-    flex-shrink: 0;
-  }
-  .eleve-info { flex: 1; min-width: 0; }
-  .eleve-name { font-size: 14px; font-weight: 700; font-family: 'Baloo 2', sans-serif; color: var(--text); }
-  .eleve-detail { font-size: 12px; color: var(--text2); margin-top: 1px; }
-  .eleve-score { font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600; }
-
-  /* BOUTONS ACTION */
-  .btn-action {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    cursor: pointer;
-    transition: all 0.18s;
-    text-align: left;
-    display: block;
-    width: 100%;
-    box-shadow: var(--shadow);
-    text-decoration: none;
-  }
-  .btn-action:hover { background: var(--surface2); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-  .btn-action:active { transform: translateY(0); }
-  .btn-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; }
-  .btn-lbl { font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); }
-  .btn-sub { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
-
-  /* TELEGRAM BOUTON */
-  .tg-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    display: flex; align-items: center; gap: 14px;
-    cursor: pointer;
-    transition: all 0.18s;
-    text-decoration: none;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-  }
-  .tg-btn:hover { background: var(--surface2); transform: translateY(-1px); }
-  .tg-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-  .tg-text { flex: 1; }
-  .tg-lbl { font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); }
-  .tg-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .tg-arrow { font-size: 18px; color: var(--text3); }
-
-  /* RAPPEL */
-  .rappel {
-    background: var(--purple-light);
-    border: 1px solid rgba(107,92,231,0.15);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-  }
-  .rappel-title { font-family: 'Baloo 2', sans-serif; font-size: 12px; font-weight: 600; color: var(--purple); margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
-  .rappel-line { font-size: 13px; color: #3C3489; line-height: 1.9; display: flex; align-items: baseline; gap: 6px; }
-  .rappel-line .code { font-family: 'Courier New', monospace; background: white; padding: 1px 7px; border-radius: 4px; font-size: 12px; color: var(--purple-dark); border: 1px solid rgba(107,92,231,0.2); }
-  .rappel-warn { color: var(--orange); font-weight: 700; font-family: 'Baloo 2', sans-serif; }
-
-  /* MB */
-  .mb8 { margin-bottom: 8px; }
-  .mb16 { margin-bottom: 16px; }
-  .mb20 { margin-bottom: 20px; }
-
-  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Geist', -apple-system, sans-serif;
+  background: #FFF8EF; color: #2A1F16; min-height: 100vh;
+  --bg:#FFF8EF; --paper:#FFFFFF; --cream:#FAEFDC; --ink:#2A1F16; --ink2:#6B5B48; --ink3:#A79A87;
+  --line:rgba(42,31,22,0.08); --line2:rgba(42,31,22,0.14);
+  --terracotta:#D1552B; --terra-tint:#FBE5D9;
+  --plum:#6B3A6A; --plum-tint:#F0E4F1;
+  --pistache:#6A8B3A; --pistache-tint:#EAF0D6;
+  --miel:#C48A12; --miel-tint:#FBEED0;
+  --rouge:#B23A2E; --rouge-tint:#F7DCD7;
+  --serif:'Fraunces',Georgia,serif;
+}
+.header { background:var(--paper); border-bottom:1px solid var(--line); padding:18px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.brand { display:flex; align-items:center; gap:14px; }
+.logo { width:44px; height:44px; background:var(--ink); color:var(--cream); border-radius:14px; display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:22px; font-weight:500; font-style:italic; position:relative; }
+.logo::after { content:''; position:absolute; top:-3px; right:-3px; width:10px; height:10px; background:var(--terracotta); border-radius:50%; border:2px solid var(--paper); }
+.brand-t { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-0.015em; line-height:1; }
+.brand-t em { font-style:italic; color:var(--terracotta); }
+.brand-s { font-size:12px; color:var(--ink2); margin-top:3px; }
+.header-right { display:flex; align-items:center; gap:12px; }
+.chip { padding:7px 14px; border-radius:99px; font-size:12px; font-weight:500; background:var(--cream); color:var(--ink2); border:1px solid var(--line); display:inline-flex; align-items:center; gap:6px; }
+.chip.countdown { background:var(--terra-tint); color:var(--terracotta); border-color:rgba(209,85,43,0.25); font-weight:600; }
+.chip.countdown .dot { width:6px; height:6px; border-radius:50%; background:var(--terracotta); animation:pulse 1.8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.avatar { width:38px; height:38px; border-radius:50%; background:var(--plum-tint); color:var(--plum); display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; box-shadow:0 0 0 1px var(--line2); }
+.tabs { background:var(--paper); border-bottom:1px solid var(--line); padding:0 32px; display:flex; gap:6px; }
+.tab { padding:12px 18px; font-size:13px; font-weight:500; color:var(--ink2); cursor:pointer; border-bottom:2.5px solid transparent; display:flex; align-items:center; gap:8px; white-space:nowrap; transition:color .15s; }
+.tab:hover { color:var(--ink); }
+.tab.active { color:var(--terracotta); border-color:var(--terracotta); font-weight:600; }
+.main { padding:28px 32px 60px; max-width:1180px; margin:0 auto; }
+.panel { display:none; }
+.panel.active { display:block; animation:fadeIn .2s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+.grid2 { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; }
+.grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.hero { background:linear-gradient(135deg,var(--cream) 0%,#FFF4E0 100%); border:1px solid var(--line); border-radius:20px; padding:24px 28px; margin-bottom:24px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle,var(--terra-tint) 0%,transparent 70%); }
+.hero-k { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--terracotta); font-weight:600; margin-bottom:6px; }
+.hero-t { font-family:var(--serif); font-size:32px; line-height:1.1; letter-spacing:-0.015em; font-weight:400; margin-bottom:4px; position:relative; }
+.hero-t em { font-style:italic; color:var(--plum); }
+.hero-d { font-size:14px; color:var(--ink2); max-width:520px; line-height:1.5; position:relative; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:0 1px 0 rgba(42,31,22,0.02),0 2px 12px rgba(42,31,22,0.03); }
+.card-ttl { font-family:var(--serif); font-size:18px; font-weight:500; letter-spacing:-0.01em; margin-bottom:14px; display:flex; justify-content:space-between; align-items:baseline; }
+.card-ttl .c { font-family:'Geist',sans-serif; font-size:12px; font-weight:400; color:var(--ink3); }
+.stat-box { background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px; position:relative; overflow:hidden; }
+.stat-box::before { content:''; position:absolute; top:12px; right:12px; width:10px; height:10px; border-radius:50%; }
+.stat-box.terr { background:var(--terra-tint); border-color:rgba(209,85,43,0.15); } .stat-box.terr::before { background:var(--terracotta); }
+.stat-box.pist { background:var(--pistache-tint); border-color:rgba(106,139,58,0.18); } .stat-box.pist::before { background:var(--pistache); }
+.stat-box.plum { background:var(--plum-tint); border-color:rgba(107,58,106,0.18); } .stat-box.plum::before { background:var(--plum); }
+.stat-box.miel { background:var(--miel-tint); border-color:rgba(196,138,18,0.2); } .stat-box.miel::before { background:var(--miel); }
+.stat-n { font-family:var(--serif); font-size:36px; font-weight:500; line-height:1; letter-spacing:-0.02em; }
+.stat-l { font-size:12px; color:var(--ink2); margin-top:6px; line-height:1.3; }
+.mat { display:grid; grid-template-columns:1fr 80px 120px 80px; gap:14px; align-items:center; padding:11px 10px; margin:0 -10px; border-bottom:1px solid var(--line); cursor:pointer; transition:background .12s; border-radius:8px; }
+.mat:hover { background:var(--cream); }
+.mat:last-child { border-bottom:none; }
+.mat-name { font-size:14px; font-weight:500; }
+.mat-dom { font-size:11px; color:var(--ink3); margin-top:2px; }
+.mat-score { font-family:var(--serif); font-size:17px; font-weight:500; text-align:right; }
+.bar-b { height:8px; background:var(--cream); border-radius:99px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:99px; transition:width 0.5s ease; }
+.bar-fill.ok { background:var(--pistache); } .bar-fill.warn { background:var(--miel); } .bar-fill.bad { background:var(--rouge); }
+.tag { font-size:10px; font-weight:600; padding:3px 9px; border-radius:99px; display:inline-block; text-align:center; }
+.tag.ok { background:var(--pistache-tint); color:var(--pistache); } .tag.warn { background:var(--miel-tint); color:var(--miel); } .tag.bad { background:var(--rouge-tint); color:var(--rouge); }
+.alert { display:flex; gap:12px; padding:12px 14px; border-radius:12px; margin-bottom:8px; align-items:flex-start; }
+.alert.bad { background:var(--rouge-tint); } .alert.warn { background:var(--miel-tint); } .alert.ok { background:var(--pistache-tint); }
+.alert-ic { width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; font-weight:700; }
+.alert.bad .alert-ic { background:var(--rouge); color:white; } .alert.warn .alert-ic { background:var(--miel); color:white; } .alert.ok .alert-ic { background:var(--pistache); color:white; }
+.alert-t { font-size:13px; font-weight:600; } .alert-s { font-size:12px; color:var(--ink2); margin-top:2px; }
+.eleve { display:flex; align-items:center; gap:14px; padding:10px; margin:0 -10px; border-radius:12px; cursor:pointer; transition:background .12s; border-bottom:1px solid var(--line); }
+.eleve:last-child { border-bottom:none; } .eleve:hover { background:var(--cream); }
+.av { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:13px; flex-shrink:0; font-family:var(--serif); }
+.av.g-red { background:var(--rouge-tint); color:var(--rouge); } .av.g-or { background:var(--miel-tint); color:var(--miel); } .av.g-gr { background:var(--pistache-tint); color:var(--pistache); } .av.g-pl { background:var(--plum-tint); color:var(--plum); }
+.eleve-i { flex:1; min-width:0; } .eleve-n { font-size:14px; font-weight:600; } .eleve-d { font-size:12px; color:var(--ink2); margin-top:2px; }
+.eleve-s { font-family:var(--serif); font-size:20px; font-weight:500; }
+.action-btn { background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:20px; cursor:pointer; transition:all .15s; display:flex; gap:14px; align-items:flex-start; text-decoration:none; color:inherit; margin-bottom:12px; }
+.action-btn:hover { border-color:var(--terracotta); box-shadow:0 4px 20px rgba(209,85,43,0.08); transform:translateY(-1px); }
+.action-btn.col { flex-direction:column; align-items:flex-start; margin-bottom:0; }
+.action-ic { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:22px; font-family:var(--serif); font-weight:500; font-style:italic; }
+.action-ic.ter { background:var(--terra-tint); color:var(--terracotta); } .action-ic.plu { background:var(--plum-tint); color:var(--plum); } .action-ic.pis { background:var(--pistache-tint); color:var(--pistache); } .action-ic.mie { background:var(--miel-tint); color:var(--miel); }
+.action-t { font-family:var(--serif); font-size:19px; font-weight:500; letter-spacing:-0.01em; margin-bottom:4px; }
+.action-d { font-size:12px; color:var(--ink2); line-height:1.5; }
+.cl { background:var(--paper); border:1px dashed var(--line2); border-radius:16px; padding:18px 20px; }
+.cl-t { font-family:var(--serif); font-size:15px; font-weight:500; color:var(--plum); margin-bottom:12px; }
+.cl-i { display:flex; gap:10px; padding:5px 0; font-size:13px; line-height:1.5; }
+.cl-i .mk { color:var(--pistache); font-weight:700; flex-shrink:0; } .cl-i.warn .mk { color:var(--terracotta); }
+.cd { font-family:monospace; font-size:11px; background:var(--cream); padding:1px 7px; border-radius:4px; }
+.cl-div { height:1px; background:var(--line); margin:10px 0; }
+.overlay { position:fixed; inset:0; z-index:100; background:rgba(42,31,22,0.45); display:flex; justify-content:flex-end; }
+.sheet { background:var(--paper); width:420px; max-width:95vw; height:100%; overflow-y:auto; display:flex; flex-direction:column; box-shadow:-20px 0 80px rgba(42,31,22,0.15); }
+.sheet-h { padding:28px 24px 20px; border-bottom:1px solid var(--line); background:linear-gradient(180deg,var(--cream),var(--paper)); position:relative; }
+.sheet-x { position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:8px; border:1px solid var(--line2); background:var(--paper); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; color:var(--ink2); }
+.av-big { width:56px; height:56px; border-radius:50%; font-size:18px; margin-bottom:12px; font-family:var(--serif); display:flex; align-items:center; justify-content:center; font-weight:600; }
+.sheet-name { font-family:var(--serif); font-size:26px; font-weight:500; }
+.sheet-meta { display:flex; gap:16px; margin-top:8px; font-size:13px; color:var(--ink2); }
+.sheet-body { padding:20px 24px; flex:1; }
+.sheet-sub { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink3); margin-bottom:10px; margin-top:18px; }
+.sheet-sub:first-child { margin-top:0; }
+.sheet-row { display:grid; grid-template-columns:1fr auto 60px; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; }
+.sheet-row:last-child { border-bottom:none; }
+.sheet-act { display:flex; gap:10px; margin-top:20px; }
+.btn-ter { flex:1; padding:12px; border-radius:12px; background:var(--terracotta); color:white; border:none; font-weight:600; font-size:13px; cursor:pointer; font-family:inherit; }
+.btn-out { flex:1; padding:12px; border-radius:12px; background:var(--paper); color:var(--ink); border:1px solid var(--line2); font-weight:500; font-size:13px; cursor:pointer; font-family:inherit; text-decoration:none; display:flex; align-items:center; justify-content:center; }
+.modal-overlay { position:fixed; inset:0; z-index:100; background:rgba(42,31,22,0.45); display:flex; align-items:center; justify-content:center; padding:40px; }
+.modal { background:var(--paper); border-radius:20px; width:560px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 20px 80px rgba(42,31,22,0.2); }
+.loading { text-align:center; padding:30px; color:var(--ink3); font-size:13px; }
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--line2); border-top-color:var(--terracotta); border-radius:50%; animation:spin .8s linear infinite; margin-right:8px; vertical-align:middle; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.mb14 { margin-bottom:14px; } .mb20 { margin-bottom:20px; }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-left">
-    <div class="logo-mark">AP</div>
+<div class="header">
+  <div class="brand">
+    <div class="logo">ap</div>
     <div>
-      <div class="app-title">Assistant Pédagogique</div>
-      <div class="app-sub">P5-P6 — FWB</div>
+      <div class="brand-t">Assistant <em>pédagogique</em></div>
+      <div class="brand-s">P5-P6 — FWB</div>
     </div>
   </div>
-  <div class="topbar-right">
-    <div class="date-pill" id="date-pill"></div>
-    <div class="bulletin-pill" id="bulletin-pill">📅 Bulletin dans 34 jours</div>
+  <div class="header-right">
+    <div class="chip" id="date-chip"></div>
+    <div class="chip countdown"><span class="dot"></span><span id="bulletin-txt">Bulletin dans — jours</span></div>
     <div class="avatar">AG</div>
   </div>
 </div>
 
-<div class="nav">
-  <div class="nav-tab active" onclick="show('matieres',this)"><span class="nav-icon">📊</span> Suivi matières</div>
-  <div class="nav-tab" onclick="show('eleves',this)"><span class="nav-icon">👥</span> Suivi élèves</div>
-  <div class="nav-tab" onclick="show('envoi',this)"><span class="nav-icon">⚡</span> Envoi rapide</div>
-  <div class="nav-tab" onclick="show('generation',this)"><span class="nav-icon">✨</span> Génération</div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('matieres',this)"><span>◐</span> Suivi matières</div>
+  <div class="tab" onclick="showTab('eleves',this)"><span>◎</span> Suivi élèves</div>
+  <div class="tab" onclick="showTab('envoi',this)"><span>↗</span> Envoi rapide</div>
+  <div class="tab" onclick="showTab('generation',this)"><span>✦</span> Génération</div>
 </div>
 
 <div class="main">
 
-  <!-- =================== SUIVI MATIÈRES =================== -->
+  <!-- MATIÈRES -->
   <div class="panel active" id="panel-matieres">
-    <div class="grid2">
-      <div>
-        <div class="section-label mb8">Vue générale</div>
-        <div class="grid4 mb16">
-          <div class="stat-card"><div class="stat-num" style="color:var(--green);" id="stat-completes">—</div><div class="stat-lbl">Matières complètes</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--red);" id="stat-incompletes">—</div><div class="stat-lbl">Incomplètes</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--purple);" id="stat-eleves-total">—</div><div class="stat-lbl">Élèves actifs</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--red);" id="stat-eleves-difficile">—</div><div class="stat-lbl">En difficulté</div></div>
-        </div>
-        <div id="loading-msg" style="font-size:12px;color:var(--text2);margin-bottom:8px;">⏳ Chargement des données…</div>
-
-        <div class="section-label mb8">Alertes</div>
-        <div id="alertes-matieres"></div>
-      </div>
-
-      <div>
-        <div class="section-label mb8">Progression par matière</div>
-        <div class="card" id="barres-matieres"></div>
-      </div>
+    <div class="hero">
+      <div class="hero-k">Tableau de bord</div>
+      <div class="hero-t" id="hero-mat-t">Chargement…</div>
+      <div class="hero-d" id="hero-mat-d">Connexion au cahier de cotes en cours.</div>
     </div>
-  </div>
-
-  <!-- =================== SUIVI ÉLÈVES =================== -->
-  <div class="panel" id="panel-eleves">
-    <div class="grid2">
-      <div>
-        <div class="section-label mb8">Élèves en difficulté</div>
-        <div class="card" id="eleves-difficile"><div style="font-size:13px;color:var(--text2);padding:8px;">⏳ Chargement…</div></div>
-      </div>
-      <div>
-        <div class="section-label mb8">Élèves au-dessus de 70%</div>
-        <div class="card" id="eleves-ok"><div style="font-size:13px;color:var(--text2);padding:8px;">⏳ Chargement…</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- =================== ENVOI RAPIDE =================== -->
-  <div class="panel" id="panel-envoi">
-    <div class="grid2">
-      <div>
-        <div class="section-label mb8">Via Telegram</div>
-        <a class="tg-btn" href="tg://resolve?domain=AssistantPedagoBot">
-          <div class="tg-icon" style="background:var(--teal-light);">🎤</div>
-          <div class="tg-text">
-            <div class="tg-lbl">Entrée vocale</div>
-            <div class="tg-sub">Ouvre @AssistantPedagoBot → envoie un message vocal</div>
-          </div>
-          <div class="tg-arrow">→</div>
-        </a>
-        <a class="tg-btn" href="tg://resolve?domain=AssistantPedagoBot">
-          <div class="tg-icon" style="background:var(--purple-light);">📷</div>
-          <div class="tg-text">
-            <div class="tg-lbl">Photo copie élève</div>
-            <div class="tg-sub">Ouvre @AssistantPedagoBot → photo + légende</div>
-          </div>
-          <div class="tg-arrow">→</div>
-        </a>
-      </div>
-      <div>
-        <div class="section-label mb8">Checklist avant envoi</div>
-        <div class="rappel">
-          <div class="rappel-title">⚠️ Rappel format</div>
-          <div class="rappel-line">Légende photo : <span class="code">Prénom Numéro</span> ex : <span class="code">Emma 3</span></div>
-          <div class="rappel-line">✔ Vérifier Configuration du cahier de cotes</div>
-          <div class="rappel-line">✔ Vérifier Configuration du sheet Forms</div>
-          <div class="rappel-line">✔ Envoyer une photo fraîche (le lien expire)</div>
-          <div class="divider"></div>
-          <div class="rappel-line rappel-warn">⚠ Modifier la Config AVANT la soumission des élèves</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- =================== GÉNÉRATION =================== -->
-  <div class="panel" id="panel-generation">
     <div class="grid4 mb20">
-      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
-        <div class="btn-icon" style="background:var(--green-light);">📝</div>
-        <div class="btn-lbl">Fiche d'exercices</div>
-        <div class="btn-sub">Ouvre le formulaire générateur</div>
-      </a>
-      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
-        <div class="btn-icon" style="background:var(--red-light);">📊</div>
-        <div class="btn-lbl">Évaluation</div>
-        <div class="btn-sub">Ouvre le formulaire générateur</div>
-      </a>
-      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
-        <div class="btn-icon" style="background:var(--purple-light);">🎮</div>
-        <div class="btn-lbl">Quiz interactif HTML</div>
-        <div class="btn-sub">Génère un quiz pour les élèves</div>
-      </a>
-      <a class="btn-action" href="https://drive.google.com/drive/folders/1ujetkjdjPUn4hK2Lr3m6O6IUO1C7FW1t?hl=fr" target="_blank">
-        <div class="btn-icon" style="background:var(--orange-light);">📁</div>
-        <div class="btn-lbl">Voir les fiches</div>
-        <div class="btn-sub">Dossier "Fiches exercices" sur Drive</div>
-      </a>
+      <div class="stat-box pist"><div class="stat-n" id="s-complet">—</div><div class="stat-l">Matières complètes</div></div>
+      <div class="stat-box terr"><div class="stat-n" id="s-incomplet">—</div><div class="stat-l">À compléter</div></div>
+      <div class="stat-box plum"><div class="stat-n" id="s-eleves">—</div><div class="stat-l">Élèves actifs</div></div>
+      <div class="stat-box miel"><div class="stat-n" id="s-diff">—</div><div class="stat-l">Sous 70 %</div></div>
     </div>
-
-    <div class="section-label mb8">Checklist avant génération</div>
-    <div class="rappel">
-      <div class="rappel-title">✅ À vérifier</div>
-      <div class="rappel-line">✔ Choisir : matière · niveau · sujet · volume · type de production</div>
-      <div class="rappel-line">✔ Vérifier que le référentiel FWB correspondant existe dans Drive</div>
-      <div class="rappel-line">✔ Nommage référentiel : <span class="code">Synthèse - MATIERE - P5-P6</span></div>
-      <div class="divider"></div>
-      <div class="rappel-line rappel-warn">⚠ "Évaluation" avec É majuscule dans le formulaire</div>
-      <div class="rappel-line rappel-warn">⚠ Vérifier bulle verte {{26.A}} dans Make si problème</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-ttl">Progression par matière <span class="c">11 matières</span></div>
+        <div id="prog-list"><div class="loading"><span class="spinner"></span>Chargement…</div></div>
+      </div>
+      <div>
+        <div class="card mb14">
+          <div class="card-ttl">Alertes <span class="c" id="al-count"></span></div>
+          <div id="al-list"><div class="loading"><span class="spinner"></span>Chargement…</div></div>
+        </div>
+        <div class="card">
+          <div class="card-ttl">Activité récente <span class="c">dernières entrées</span></div>
+          <div id="act-list"><div class="loading"><span class="spinner"></span>Chargement…</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- ÉLÈVES -->
+  <div class="panel" id="panel-eleves">
+    <div class="hero">
+      <div class="hero-k">Suivi individuel</div>
+      <div class="hero-t" id="hero-elv-t">Chargement…</div>
+      <div class="hero-d">Cliquer un élève pour ouvrir sa fiche détaillée : cotes par matière et actions rapides.</div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-ttl">En difficulté <span class="c">sous 70 %</span></div>
+        <div id="elv-diff"><div class="loading"><span class="spinner"></span>Chargement…</div></div>
+      </div>
+      <div class="card">
+        <div class="card-ttl">Au-dessus de 70 % <span class="c" id="elv-ok-count"></span></div>
+        <div id="elv-ok"><div class="loading"><span class="spinner"></span>Chargement…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENVOI -->
+  <div class="panel" id="panel-envoi">
+    <div class="hero">
+      <div class="hero-k">Canaux entrants</div>
+      <div class="hero-t">Envoyer via <em>Telegram</em></div>
+      <div class="hero-d">Une cote, une copie, une note vocale — directement au bot. Traité en moins de 30 secondes.</div>
+    </div>
+    <div class="grid2">
+      <div>
+        <a href="tg://resolve?domain=AssistantPedagoBot" class="action-btn">
+          <div class="action-ic ter">♪</div>
+          <div><div class="action-t">Entrée vocale</div><div class="action-d">Ouvre @AssistantPedagoBot, envoie un message vocal.</div></div>
+        </a>
+        <a href="tg://resolve?domain=AssistantPedagoBot" class="action-btn">
+          <div class="action-ic plu">◇</div>
+          <div><div class="action-t">Photo d'une copie</div><div class="action-d">Prendre en photo le cahier, légender « Prénom Numéro », envoyer.</div></div>
+        </a>
+      </div>
+      <div class="cl">
+        <div class="cl-t">⚠ Rappel — avant l'envoi</div>
+        <div class="cl-i"><span class="mk">✓</span><span>Légende photo : <span class="cd">Prénom Numéro</span> — ex. <span class="cd">Emma 3</span></span></div>
+        <div class="cl-i"><span class="mk">✓</span><span>Vérifier la configuration du cahier de cotes.</span></div>
+        <div class="cl-i"><span class="mk">✓</span><span>Vérifier la configuration du sheet Forms.</span></div>
+        <div class="cl-i"><span class="mk">✓</span><span>Le lien photo expire — envoyer une image fraîche.</span></div>
+        <div class="cl-div"></div>
+        <div class="cl-i warn"><span class="mk">⚠</span><span><b>Modifier la Config AVANT la soumission des élèves.</b></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GÉNÉRATION -->
+  <div class="panel" id="panel-generation">
+    <div class="hero">
+      <div class="hero-k">Ressources</div>
+      <div class="hero-t">Atelier de <em>génération</em></div>
+      <div class="hero-d">Fiches, évaluations, quiz — produits à partir du référentiel FWB P5-P6.</div>
+    </div>
+    <div class="grid4 mb20">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/viewform" target="_blank" class="action-btn col">
+        <div class="action-ic ter">§</div>
+        <div><div class="action-t">Fiche d'exercices</div><div class="action-d">Ouvre le formulaire générateur</div></div>
+      </a>
+      <a href="https://docs.google.com/forms/d/123lBQ3nvo8g6MKnLcc3XvlkBDGDZ938bh1gKLZfFvNk/edit" target="_blank" class="action-btn col">
+        <div class="action-ic plu">%</div>
+        <div><div class="action-t">Évaluation</div><div class="action-d">Créer / modifier le Forms élèves</div></div>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/viewform" target="_blank" class="action-btn col">
+        <div class="action-ic pis">?</div>
+        <div><div class="action-t">Quiz interactif</div><div class="action-d">Quiz HTML jouable en classe</div></div>
+      </a>
+      <a href="https://drive.google.com/drive/folders/1ujetkjdjPUn4hK2Lr3m6O6IUO1C7FW1t" target="_blank" class="action-btn col">
+        <div class="action-ic mie">≡</div>
+        <div><div class="action-t">Voir les fiches</div><div class="action-d">Dossier Drive « Fiches exercices »</div></div>
+      </a>
+    </div>
+    <div class="cl">
+      <div class="cl-t">✓ Avant génération</div>
+      <div class="cl-i"><span class="mk">✓</span><span>Choisir : matière · niveau · sujet · volume · type de production.</span></div>
+      <div class="cl-i"><span class="mk">✓</span><span>Vérifier que le référentiel FWB correspondant existe dans Drive.</span></div>
+      <div class="cl-i"><span class="mk">✓</span><span>Nommage référentiel : <span class="cd">Synthèse - MATIERE - P5-P6</span></span></div>
+      <div class="cl-div"></div>
+      <div class="cl-i warn"><span class="mk">⚠</span><span>« Évaluation » avec É majuscule dans le formulaire.</span></div>
+      <div class="cl-i warn"><span class="mk">⚠</span><span>Vérifier bulle verte <span class="cd">{{26.A}}</span> dans Make si problème.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MATIÈRE -->
+<div class="modal-overlay" id="modal-mat" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="sheet-x" onclick="closeModal()">×</button>
+    <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px" id="modal-dom"></div>
+    <div class="hero-t" style="font-size:28px;margin-bottom:0" id="modal-nom"></div>
+    <div class="grid4" style="margin-top:20px;margin-bottom:20px">
+      <div class="stat-box pist"><div class="stat-n" id="m-cotes"></div><div class="stat-l">Cotes</div></div>
+      <div class="stat-box plum"><div class="stat-n" id="m-avg"></div><div class="stat-l">Moy. classe</div></div>
+      <div class="stat-box miel"><div class="stat-n" id="m-diff"></div><div class="stat-l">En difficulté</div></div>
+      <div class="stat-box terr"><div class="stat-n" id="m-eval"></div><div class="stat-l">Évalués</div></div>
+    </div>
+    <div id="m-eleves"></div>
+  </div>
+</div>
+
+<!-- SHEET ÉLÈVE -->
+<div class="overlay" id="sheet-elv" style="display:none" onclick="closeSheet()">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-h">
+      <button class="sheet-x" onclick="closeSheet()">×</button>
+      <div class="av-big" id="sh-av"></div>
+      <div class="sheet-name" id="sh-name"></div>
+      <div class="sheet-meta" id="sh-meta"></div>
+    </div>
+    <div class="sheet-body">
+      <div class="sheet-sub">Résultats par matière</div>
+      <div id="sh-matieres"></div>
+      <div class="sheet-act">
+        <button class="btn-ter" onclick="closeSheet()">Fermer</button>
+        <a class="btn-out" href="tg://resolve?domain=AssistantPedagoBot">Envoyer photo</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-  function show(panel, tab) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('panel-' + panel).classList.add('active');
-    tab.classList.add('active');
+const API_KEY = 'AIzaSyClf11c8lLLU06D5AuKgpp_DHL1aaeuKBQ';
+const SHEET_ID = '1E76VB1aAHiSn1e2oJLhayudKO8u2CIeDLOTU-VcUrGk';
+const BULLETIN = new Date('2026-06-19');
+const SEUIL = 70;
+
+const ONGLETS = [
+  {id:'ecouter',   nom:'Savoir écouter',       domaine:'Français'},
+  {id:'lire',      nom:'Savoir lire',           domaine:'Français'},
+  {id:'conjugaison',nom:'Conjugaison',          domaine:'Français'},
+  {id:'outils',    nom:'Outils pour la langue', domaine:'Français'},
+  {id:'ecrire',    nom:'Savoir écrire',         domaine:'Français'},
+  {id:'nombres',   nom:'Nomb. & Op.',           domaine:'Mathématiques'},
+  {id:'grandeurs', nom:'Grandeurs',             domaine:'Mathématiques'},
+  {id:'solides',   nom:'Sol & Fig',             domaine:'Mathématiques'},
+  {id:'donnees',   nom:'Traitement données',    domaine:'Mathématiques'},
+  {id:'sciences',  nom:'Eveil Sciences',        domaine:'Éveil'},
+  {id:'fhges',     nom:'Eveil FHGES',           domaine:'Éveil'},
+];
+
+let DATA = {};
+
+function initDate() {
+  const days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const months=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const now=new Date();
+  document.getElementById('date-chip').textContent=days[now.getDay()]+' '+now.getDate()+' '+months[now.getMonth()];
+  const d=Math.ceil((BULLETIN-now)/86400000);
+  document.getElementById('bulletin-txt').textContent=d>0?'Bulletin dans '+d+' jours':'Bulletin passé';
+}
+
+function showTab(id,el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+async function fetchSheet(nom) {
+  const enc=encodeURIComponent(nom+'!A1:Z100');
+  const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${enc}?key=${API_KEY}`);
+  if(!r.ok) throw new Error(r.status);
+  return (await r.json()).values||[];
+}
+
+function parseSheet(rows) {
+  if(!rows||rows.length<3) return {eleves:[],nbCotes:0,maxCotes:0};
+  const headers=rows[0]||[], maxRow=rows[1]||[];
+  const cols=[];
+  for(let c=1;c<headers.length;c++) if(headers[c]&&headers[c].trim()) cols.push({c,max:parseFloat(maxRow[c])||10,label:headers[c]});
+  const eleves=[];
+  for(let r=2;r<rows.length;r++) {
+    const row=rows[r];
+    if(!row||!row[0]||!row[0].trim()) continue;
+    const m=row[0].trim().match(/^\d+\s*[-–]\s*(.+)$/);
+    const prenom=m?m[1].trim():row[0].trim();
+    const scores=cols.map(col=>{const v=row[col.c];const n=v!==undefined&&v!==''?parseFloat(v.toString().replace(',','.')):null;return{val:isNaN(n)?null:n,max:col.max,label:col.label};});
+    eleves.push({prenom,scores});
   }
+  let nbCotes=0;
+  for(let ci=0;ci<cols.length;ci++) if(eleves.some(e=>e.scores[ci]&&e.scores[ci].val!==null)) nbCotes++;
+  return{eleves,nbCotes,maxCotes:cols.length};
+}
 
-  // =================== CONFIG ===================
-  const SHEET_ID = '1E76VB1aAHiSn1e2oJLhayudKO8u2CIeDLOTU-VcUrGk';
-  const API_KEY  = 'AIzaSyClf11c8lLLU06D5AuKgpp_DHL1aaeuKBQ';
-  const SEUIL    = 0.7;
-  const DATE_BULLETIN = new Date('2026-06-18');
+function eleveGlobal(prenom) {
+  let obt=0,mx=0,diff=[];
+  for(const ong of ONGLETS) {
+    const d=DATA[ong.id]; if(!d) continue;
+    const e=d.eleves.find(x=>x.prenom===prenom); if(!e) continue;
+    let eo=0,em=0;
+    e.scores.forEach(s=>{if(s.val!==null){eo+=s.val;em+=s.max;}});
+    if(em>0){obt+=eo;mx+=em;if((eo/em)*100<SEUIL)diff.push(ong.nom);}
+  }
+  return{obt,mx,pct:mx>0?Math.round((obt/mx)*100):null,diff};
+}
 
-  const ONGLETS = [
-    'Savoir écouter','Savoir lire','Outils pour la langue',
-    'Savoir écrire','Nomb. & Op.','Grandeurs',
-    'Sol & Fig','Traitement données','Eveil Sciences','Eveil FHGES'
-  ];
+function prenoms() {
+  const s=new Set();
+  ONGLETS.forEach(o=>{const d=DATA[o.id];if(d)d.eleves.forEach(e=>s.add(e.prenom));});
+  return Array.from(s);
+}
 
-  // =================== DATE & BULLETIN ===================
-  const days   = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-  const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  const now    = new Date();
-  document.getElementById('date-pill').textContent =
-    days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+function colorP(p){if(p===null)return'var(--ink3)';if(p<50)return'var(--rouge)';if(p<70)return'var(--miel)';if(p<80)return'var(--plum)';return'var(--pistache)';}
+function groupP(p){if(p===null||p<50)return'g-red';if(p<70)return'g-or';if(p<80)return'g-pl';return'g-gr';}
+function init2(n){return n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
 
-  const joursRestants = Math.ceil((DATE_BULLETIN - now) / (1000*60*60*24));
-  const pill = document.getElementById('bulletin-pill');
-  if (joursRestants > 0) {
-    pill.textContent = '📅 Bulletin dans ' + joursRestants + ' jours';
-    pill.style.background = joursRestants < 14 ? 'var(--red-light)' : 'var(--orange-light)';
-    pill.style.color       = joursRestants < 14 ? 'var(--red)'      : 'var(--orange)';
+function renderMatieres() {
+  const ps=prenoms();
+  let complet=0,incomplet=0;
+  let ndiff=ps.filter(p=>{const{pct}=eleveGlobal(p);return pct!==null&&pct<SEUIL;}).length;
+
+  const progHTML=ONGLETS.map(ong=>{
+    const d=DATA[ong.id]||{nbCotes:0,maxCotes:0};
+    const pct=d.maxCotes>0?d.nbCotes/d.maxCotes:0;
+    const cls=pct===0?'bad':pct>=1?'ok':'warn';
+    const lbl=pct===0?'Vide':pct>=1?'OK':'Partiel';
+    if(pct>=1)complet++;else incomplet++;
+    return `<div class="mat" onclick="openModal('${ong.id}')">
+      <div><div class="mat-name">${ong.nom}</div><div class="mat-dom">${ong.domaine}</div></div>
+      <div class="mat-score">${d.nbCotes}/${d.maxCotes}</div>
+      <div class="bar-b"><div class="bar-fill ${cls}" style="width:${Math.round(pct*100)}%"></div></div>
+      <div style="text-align:right"><span class="tag ${cls}">${lbl}</span></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('prog-list').innerHTML=progHTML;
+  document.getElementById('s-complet').textContent=complet;
+  document.getElementById('s-incomplet').textContent=incomplet;
+  document.getElementById('s-eleves').textContent=ps.length;
+  document.getElementById('s-diff').textContent=ndiff;
+  document.getElementById('hero-mat-t').innerHTML=incomplet>0?`${incomplet} matière${incomplet>1?'s':''} <em>en attente</em>`:`Toutes les matières <em>complètes</em>`;
+  document.getElementById('hero-mat-d').textContent=`${ps.length} élèves · ${ndiff} en difficulté · prochain bulletin le 19 juin.`;
+
+  const alertes=ONGLETS.map(ong=>{
+    const d=DATA[ong.id]||{nbCotes:0,maxCotes:0};
+    if(d.maxCotes===0||d.nbCotes>=d.maxCotes) return null;
+    const cls=d.nbCotes===0?'bad':'warn';
+    const txt=d.nbCotes===0?`Aucune évaluation — ${d.maxCotes} cotes manquantes`:`${d.nbCotes}/${d.maxCotes} cotes — ${d.maxCotes-d.nbCotes} restante(s)`;
+    return `<div class="alert ${cls}"><div class="alert-ic">${d.nbCotes===0?'!':'·'}</div><div><div class="alert-t">${ong.nom}</div><div class="alert-s">${txt}</div></div></div>`;
+  }).filter(Boolean);
+
+  document.getElementById('al-count').textContent=alertes.length+' actives';
+  document.getElementById('al-list').innerHTML=alertes.length?alertes.join(''):'<div class="loading">Aucune alerte 🎉</div>';
+  document.getElementById('act-list').innerHTML='<div class="loading">Les dernières entrées s\'afficheront ici.</div>';
+}
+
+function renderEleves() {
+  const ps=prenoms();
+  const avec=ps.map(p=>({prenom:p,...eleveGlobal(p)})).filter(e=>e.pct!==null);
+  const diff=avec.filter(e=>e.pct<SEUIL).sort((a,b)=>a.pct-b.pct);
+  const ok=avec.filter(e=>e.pct>=SEUIL).sort((a,b)=>b.pct-a.pct);
+
+  document.getElementById('hero-elv-t').innerHTML=`${avec.length} <em>élèves</em> · ${diff.length} en alerte`;
+
+  const eHTML=e=>`<div class="eleve" onclick="openSheet('${e.prenom}')">
+    <div class="av ${groupP(e.pct)}">${init2(e.prenom)}</div>
+    <div class="eleve-i"><div class="eleve-n">${e.prenom}</div><div class="eleve-d">${e.diff.length?e.diff.slice(0,2).join(' · '):'Toutes matières OK'}</div></div>
+    <div class="eleve-s" style="color:${colorP(e.pct)}">${e.pct}%</div>
+  </div>`;
+
+  document.getElementById('elv-diff').innerHTML=diff.length?diff.map(eHTML).join(''):'<div class="loading">Aucun élève en difficulté 🎉</div>';
+  document.getElementById('elv-ok-count').textContent=ok.length+' élèves';
+  document.getElementById('elv-ok').innerHTML=ok.length?ok.map(eHTML).join(''):'<div class="loading">Données insuffisantes</div>';
+}
+
+function openModal(id) {
+  const ong=ONGLETS.find(o=>o.id===id);
+  const d=DATA[id]||{eleves:[],nbCotes:0,maxCotes:0};
+  const scores=d.eleves.map(e=>{let o=0,m=0;e.scores.forEach(s=>{if(s.val!==null){o+=s.val;m+=s.max;}});return m>0?Math.round((o/m)*100):null;}).filter(x=>x!==null);
+  const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):null;
+  const ediff=d.eleves.filter(e=>{let o=0,m=0;e.scores.forEach(s=>{if(s.val!==null){o+=s.val;m+=s.max;}});return m>0&&(o/m)*100<SEUIL;});
+
+  document.getElementById('modal-dom').textContent=ong.domaine;
+  document.getElementById('modal-nom').textContent=ong.nom;
+  document.getElementById('m-cotes').textContent=d.nbCotes+'/'+d.maxCotes;
+  document.getElementById('m-avg').textContent=avg!==null?avg+'%':'—';
+  document.getElementById('m-diff').textContent=ediff.length;
+  document.getElementById('m-eval').textContent=scores.length;
+
+  let html='';
+  if(ediff.length>0) {
+    html='<div class="sheet-sub">Élèves concernés</div>';
+    html+=ediff.map(e=>{let o=0,m=0;e.scores.forEach(s=>{if(s.val!==null){o+=s.val;m+=s.max;}});const p=m>0?Math.round((o/m)*100):null;
+      return `<div class="sheet-row"><div style="display:flex;align-items:center;gap:10px"><div class="av g-red" style="width:28px;height:28px;font-size:10px">${init2(e.prenom)}</div><span>${e.prenom}</span></div><div style="width:70px"><div class="bar-b"><div class="bar-fill bad" style="width:${p||0}%"></div></div></div><div style="text-align:right;color:var(--rouge);font-weight:600;font-family:var(--serif);font-size:15px">${p!==null?p+'%':'—'}</div></div>`;
+    }).join('');
+  } else if(d.maxCotes===0) {
+    html='<div class="alert warn"><div class="alert-ic">!</div><div><div class="alert-t">Aucune évaluation encodée</div><div class="alert-s">Ajoutez des cotes dans le cahier de cotes.</div></div></div>';
   } else {
-    pill.textContent = '📅 Bulletin passé';
+    html='<div class="alert ok"><div class="alert-ic">✓</div><div><div class="alert-t">Aucun élève en difficulté</div><div class="alert-s">Tous les élèves évalués sont au-dessus du seuil.</div></div></div>';
   }
+  if(d.nbCotes<d.maxCotes&&d.maxCotes>0) html+=`<div class="alert warn" style="margin-top:14px"><div class="alert-ic">!</div><div><div class="alert-t">Évaluations manquantes</div><div class="alert-s">${d.maxCotes-d.nbCotes} cote(s) restent à encoder.</div></div></div>`;
 
-  // =================== SHEETS API ===================
-  async function fetchRange(onglet, range) {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(onglet + '!' + range)}?key=${API_KEY}`;
-    const r = await fetch(url);
-    const d = await r.json();
-    return d.values || [];
+  document.getElementById('m-eleves').innerHTML=html;
+  document.getElementById('modal-mat').style.display='flex';
+}
+function closeModal(){document.getElementById('modal-mat').style.display='none';}
+
+function openSheet(prenom) {
+  const{pct,diff}=eleveGlobal(prenom);
+  let nbC=0;
+  ONGLETS.forEach(ong=>{const d=DATA[ong.id];if(!d)return;const e=d.eleves.find(x=>x.prenom===prenom);if(e)nbC+=e.scores.filter(s=>s.val!==null).length;});
+
+  const av=document.getElementById('sh-av');
+  av.className='av-big '+groupP(pct);
+  av.textContent=init2(prenom);
+  document.getElementById('sh-name').textContent=prenom;
+  document.getElementById('sh-meta').innerHTML=`<span>Moyenne <b style="color:${colorP(pct)}">${pct!==null?pct+'%':'—'}</b></span><span>Cotes <b>${nbC}</b></span>`;
+
+  const matHTML=ONGLETS.map(ong=>{
+    const d=DATA[ong.id];
+    if(!d)return'';
+    const e=d.eleves.find(x=>x.prenom===prenom);
+    if(!e)return`<div class="sheet-row"><div>${ong.nom}</div><div style="width:70px"><div class="bar-b"></div></div><div style="text-align:right;color:var(--ink3)">—</div></div>`;
+    let o=0,m=0;e.scores.forEach(s=>{if(s.val!==null){o+=s.val;m+=s.max;}});
+    const p=m>0?Math.round((o/m)*100):null;
+    const bc=p===null?'':p<50?'bad':p<70?'warn':'ok';
+    return`<div class="sheet-row"><div>${ong.nom}</div><div style="width:70px"><div class="bar-b"><div class="bar-fill ${bc}" style="width:${p||0}%"></div></div></div><div style="text-align:right;font-weight:600;color:${colorP(p)};font-family:var(--serif);font-size:15px">${p!==null?p+'%':'—'}</div></div>`;
+  }).join('');
+
+  document.getElementById('sh-matieres').innerHTML=matHTML;
+  document.getElementById('sheet-elv').style.display='flex';
+}
+function closeSheet(){document.getElementById('sheet-elv').style.display='none';}
+
+async function init() {
+  initDate();
+  try {
+    const results=await Promise.all(ONGLETS.map(async ong=>({id:ong.id,...parseSheet(await fetchSheet(ong.nom))})));
+    results.forEach(r=>{DATA[r.id]=r;});
+    renderMatieres();
+    renderEleves();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('prog-list').innerHTML='<div class="loading" style="color:var(--rouge)">Erreur de connexion — vérifie que le Sheets est partagé en lecture publique.</div>';
+    document.getElementById('al-list').innerHTML='<div class="loading" style="color:var(--rouge)">Erreur de connexion.</div>';
+    document.getElementById('hero-mat-t').textContent='Erreur de connexion';
+    document.getElementById('hero-mat-d').textContent='Vérifie que le cahier de cotes est partagé en lecture publique.';
   }
-
-  // =================== ANALYSE ===================
-  async function loadData() {
-    document.getElementById('loading-msg').style.display = 'block';
-    try {
-      const results = await Promise.all(ONGLETS.map(o => fetchRange(o, 'A1:Z50')));
-      const matiereStats = [];
-      const eleveMap = {};
-
-      results.forEach((rows, idx) => {
-        const nomMatiere = ONGLETS[idx];
-        if (!rows || rows.length < 2) {
-          matiereStats.push({ nom: nomMatiere, encodees: 0, max: 0 });
-          return;
-        }
-        const maxRow = rows[1] ? rows[1].slice(1) : [];
-        const nbEvals = maxRow.filter(v => v && v.trim() !== '' && !isNaN(parseFloat(v))).length;
-
-        let evalsAvecCotes = 0;
-        for (let col = 0; col < nbEvals; col++) {
-          const hasCote = rows.slice(2).some(row => row[col+1] && row[col+1].trim() !== '' && !isNaN(parseFloat(row[col+1])));
-          if (hasCote) evalsAvecCotes++;
-        }
-        matiereStats.push({ nom: nomMatiere, encodees: evalsAvecCotes, max: nbEvals });
-
-        rows.slice(2).forEach(row => {
-          const prenomRaw = row[0] ? row[0].trim() : '';
-          if (!prenomRaw) return;
-          const prenom = prenomRaw.replace(/^\d+\s*-\s*/, '').trim();
-          if (!prenom) return;
-          if (!eleveMap[prenom]) eleveMap[prenom] = { points: 0, maxPoints: 0, matieresFaibles: [] };
-          let ptsMat = 0, maxMat = 0;
-          for (let col = 0; col < nbEvals; col++) {
-            const val = parseFloat(row[col+1]);
-            const mx  = parseFloat(maxRow[col]);
-            if (!isNaN(val) && !isNaN(mx) && mx > 0) { ptsMat += val; maxMat += mx; }
-          }
-          if (maxMat > 0) {
-            eleveMap[prenom].points    += ptsMat;
-            eleveMap[prenom].maxPoints += maxMat;
-            if (ptsMat / maxMat < SEUIL) eleveMap[prenom].matieresFaibles.push(nomMatiere);
-          }
-        });
-      });
-
-      renderMatieres(matiereStats);
-      renderEleves(eleveMap);
-      document.getElementById('loading-msg').style.display = 'none';
-    } catch(e) {
-      document.getElementById('loading-msg').textContent = '⚠ Erreur de chargement — vérifier la clé API et le partage du Sheets.';
-      console.error(e);
-    }
-  }
-
-  // =================== RENDER MATIÈRES ===================
-  function renderMatieres(stats) {
-    const completes   = stats.filter(s => s.max > 0 && s.encodees >= s.max).length;
-    const incompletes = stats.filter(s => s.encodees < s.max).length;
-    document.getElementById('stat-completes').textContent   = completes;
-    document.getElementById('stat-incompletes').textContent = incompletes;
-
-    const alertesEl = document.getElementById('alertes-matieres');
-    alertesEl.innerHTML = '';
-    stats.filter(s => s.encodees === 0).forEach(s => {
-      alertesEl.innerHTML += `<div class="alert-row al-danger"><div class="al-dot"></div><div class="al-content"><div class="al-title">${s.nom}</div><div class="al-sub">0/${s.max} cotes encodées — aucune évaluation</div></div></div>`;
-    });
-    stats.filter(s => s.encodees > 0 && s.encodees < s.max).forEach(s => {
-      const m = s.max - s.encodees;
-      alertesEl.innerHTML += `<div class="alert-row al-warn"><div class="al-dot"></div><div class="al-content"><div class="al-title">${s.nom}</div><div class="al-sub">${s.encodees}/${s.max} cotes — ${m} manquante${m>1?'s':''}</div></div></div>`;
-    });
-    const oksNames = stats.filter(s => s.max > 0 && s.encodees >= s.max).map(s => s.nom);
-    if (oksNames.length > 0) {
-      alertesEl.innerHTML += `<div class="alert-row al-ok"><div class="al-dot"></div><div class="al-content"><div class="al-title">${oksNames.length} matière${oksNames.length>1?'s':''} complète${oksNames.length>1?'s':''}</div><div class="al-sub">${oksNames.join(' · ')}</div></div></div>`;
-    }
-
-    const barresEl = document.getElementById('barres-matieres');
-    barresEl.innerHTML = '';
-    stats.forEach(s => {
-      const pct   = s.max > 0 ? Math.round((s.encodees / s.max) * 100) : 0;
-      const cls   = pct === 100 ? 'bar-ok' : pct === 0 ? 'bar-danger' : 'bar-warn';
-      const bcls  = pct === 100 ? 'b-ok'   : pct === 0 ? 'b-danger'   : 'b-warn';
-      const label = pct === 100 ? 'OK' : pct === 0 ? 'Vide' : `${s.max-s.encodees} manque${s.max-s.encodees>1?'s':''}`;
-      barresEl.innerHTML += `<div class="mat-row"><div class="mat-name">${s.nom}</div><div class="bar-wrap"><div class="bar ${cls}" style="width:${pct}%"></div></div><div class="score-txt">${s.encodees}/${s.max}</div><div class="badge ${bcls}">${label}</div></div>`;
-    });
-  }
-
-  // =================== RENDER ÉLÈVES ===================
-  function renderEleves(eleveMap) {
-    const eleves = Object.entries(eleveMap).map(([prenom, d]) => ({
-      prenom,
-      pct: d.maxPoints > 0 ? Math.round((d.points / d.maxPoints) * 100) : null,
-      faibles: d.matieresFaibles
-    })).filter(e => e.pct !== null).sort((a,b) => a.pct - b.pct);
-
-    const difficile = eleves.filter(e => e.pct < SEUIL * 100);
-    const ok        = eleves.filter(e => e.pct >= SEUIL * 100).reverse();
-
-    document.getElementById('stat-eleves-total').textContent     = eleves.length;
-    document.getElementById('stat-eleves-difficile').textContent = difficile.length;
-
-    function ini(p) { return p.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2); }
-
-    document.getElementById('eleves-difficile').innerHTML = difficile.length === 0
-      ? '<div style="padding:12px;font-size:13px;color:var(--text2);">Tous les élèves sont au-dessus du seuil 🎉</div>'
-      : difficile.map(e => `<div class="eleve-row"><div class="av" style="background:${e.pct<50?'var(--red-light)':'var(--orange-light)'};color:${e.pct<50?'var(--red)':'var(--orange)'};">${ini(e.prenom)}</div><div class="eleve-info"><div class="eleve-name">${e.prenom}</div><div class="eleve-detail">${e.faibles.length>0?e.faibles.join(' · '):'Score global faible'}</div></div><div class="eleve-score" style="color:${e.pct<50?'var(--red)':'var(--orange)'};">${e.pct}%</div></div>`).join('');
-
-    document.getElementById('eleves-ok').innerHTML =
-      ok.slice(0,6).map(e => `<div class="eleve-row"><div class="av" style="background:var(--green-light);color:var(--green);">${ini(e.prenom)}</div><div class="eleve-info"><div class="eleve-name">${e.prenom}</div><div class="eleve-detail">Toutes matières OK</div></div><div class="eleve-score" style="color:var(--green);">${e.pct}%</div></div>`).join('')
-      + (ok.length > 6 ? `<div style="padding-top:10px;font-size:12px;color:var(--text2);">+ ${ok.length-6} autres élèves au-dessus du seuil</div>` : '');
-  }
-
-  loadData();
+}
+init();
 </script>
 </body>
 </html>
