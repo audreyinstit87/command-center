@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistant Pédagogique — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE8;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1A1714;
+    --text2: #6B6560;
+    --text3: #A09890;
+    --purple: #6B5CE7;
+    --purple-light: #EEEDFE;
+    --purple-dark: #4A3FB5;
+    --green: #3B9B5A;
+    --green-light: #E6F5EC;
+    --orange: #C47B1A;
+    --orange-light: #FDF0DC;
+    --red: #C43B3B;
+    --red-light: #FDEAEA;
+    --teal: #1A8A7A;
+    --teal-light: #E0F5F2;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Comic Neue', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+
+  .logo-mark {
+    width: 38px; height: 38px;
+    background: var(--purple);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px; font-weight: 600; color: white;
+  }
+
+  .app-title {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 17px; font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .app-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .bulletin-pill {
+    font-size: 12px; font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 99px;
+    background: var(--orange-light);
+    color: var(--orange);
+    border: 1px solid rgba(196,123,26,0.2);
+    font-family: 'Baloo 2', sans-serif;
+  }
+
+  .date-pill {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 5px 12px;
+    background: var(--surface2);
+    border-radius: 99px;
+  }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--purple-light);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--purple);
+    border: 2px solid white;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 24px;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    padding: 12px 20px;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.18s;
+    display: flex; align-items: center; gap: 7px;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text); background: var(--bg); }
+  .nav-tab.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .nav-icon { font-size: 15px; }
+
+  /* MAIN */
+  .main { padding: 20px 24px; max-width: 1100px; margin: 0 auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-label {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .stat-card {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .stat-num { font-family: 'Baloo 2', sans-serif; font-size: 28px; font-weight: 600; line-height: 1; }
+  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  /* MATIÈRES */
+  .mat-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .mat-row:last-child { border-bottom: none; }
+  .mat-name { font-size: 13px; color: var(--text); width: 130px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-wrap { flex: 1; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .bar { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .bar-ok { background: var(--green); }
+  .bar-warn { background: var(--orange); }
+  .bar-danger { background: var(--red); }
+  .score-txt { font-size: 11px; color: var(--text2); width: 28px; text-align: right; flex-shrink: 0; font-family: 'Baloo 2', sans-serif; }
+  .badge { font-size: 10px; font-weight: 700; font-family: 'Baloo 2', sans-serif; padding: 2px 8px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+  .b-ok { background: var(--green-light); color: var(--green); }
+  .b-warn { background: var(--orange-light); color: var(--orange); }
+  .b-danger { background: var(--red-light); color: var(--red); }
+
+  /* ALERTES */
+  .alert-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    border: 1px solid transparent;
+  }
+  .al-danger { background: var(--red-light); border-color: rgba(196,59,59,0.15); }
+  .al-warn { background: var(--orange-light); border-color: rgba(196,123,26,0.15); }
+  .al-ok { background: var(--green-light); border-color: rgba(59,155,90,0.15); }
+  .al-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .al-danger .al-dot { background: var(--red); }
+  .al-warn .al-dot { background: var(--orange); }
+  .al-ok .al-dot { background: var(--green); }
+  .al-content { flex: 1; }
+  .al-title { font-size: 13px; font-weight: 700; font-family: 'Baloo 2', sans-serif; }
+  .al-danger .al-title { color: var(--red); }
+  .al-warn .al-title { color: var(--orange); }
+  .al-ok .al-title { color: var(--green); }
+  .al-sub { font-size: 12px; margin-top: 2px; color: var(--text2); }
+
+  /* ÉLÈVES */
+  .eleve-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .eleve-row:last-child { border-bottom: none; }
+  .av {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; font-family: 'Baloo 2', sans-serif;
+    flex-shrink: 0;
+  }
+  .eleve-info { flex: 1; min-width: 0; }
+  .eleve-name { font-size: 14px; font-weight: 700; font-family: 'Baloo 2', sans-serif; color: var(--text); }
+  .eleve-detail { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .eleve-score { font-family: 'Baloo 2', sans-serif; font-size: 15px; font-weight: 600; }
+
+  /* BOUTONS ACTION */
+  .btn-action {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    display: block;
+    width: 100%;
+    box-shadow: var(--shadow);
+    text-decoration: none;
+  }
+  .btn-action:hover { background: var(--surface2); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .btn-action:active { transform: translateY(0); }
+  .btn-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; }
+  .btn-lbl { font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); }
+  .btn-sub { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+
+  /* TELEGRAM BOUTON */
+  .tg-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-decoration: none;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .tg-btn:hover { background: var(--surface2); transform: translateY(-1px); }
+  .tg-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .tg-text { flex: 1; }
+  .tg-lbl { font-family: 'Baloo 2', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); }
+  .tg-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .tg-arrow { font-size: 18px; color: var(--text3); }
+
+  /* RAPPEL */
+  .rappel {
+    background: var(--purple-light);
+    border: 1px solid rgba(107,92,231,0.15);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .rappel-title { font-family: 'Baloo 2', sans-serif; font-size: 12px; font-weight: 600; color: var(--purple); margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .rappel-line { font-size: 13px; color: #3C3489; line-height: 1.9; display: flex; align-items: baseline; gap: 6px; }
+  .rappel-line .code { font-family: 'Courier New', monospace; background: white; padding: 1px 7px; border-radius: 4px; font-size: 12px; color: var(--purple-dark); border: 1px solid rgba(107,92,231,0.2); }
+  .rappel-warn { color: var(--orange); font-weight: 700; font-family: 'Baloo 2', sans-serif; }
+
+  /* MB */
+  .mb8 { margin-bottom: 8px; }
+  .mb16 { margin-bottom: 16px; }
+  .mb20 { margin-bottom: 20px; }
+
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-mark">AP</div>
+    <div>
+      <div class="app-title">Assistant Pédagogique</div>
+      <div class="app-sub">P5-P6 — FWB</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="date-pill" id="date-pill"></div>
+    <div class="bulletin-pill" id="bulletin-pill">📅 Bulletin dans 34 jours</div>
+    <div class="avatar">AG</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="show('matieres',this)"><span class="nav-icon">📊</span> Suivi matières</div>
+  <div class="nav-tab" onclick="show('eleves',this)"><span class="nav-icon">👥</span> Suivi élèves</div>
+  <div class="nav-tab" onclick="show('envoi',this)"><span class="nav-icon">⚡</span> Envoi rapide</div>
+  <div class="nav-tab" onclick="show('generation',this)"><span class="nav-icon">✨</span> Génération</div>
+</div>
+
+<div class="main">
+
+  <!-- =================== SUIVI MATIÈRES =================== -->
+  <div class="panel active" id="panel-matieres">
+    <div class="grid2">
+      <div>
+        <div class="section-label mb8">Vue générale</div>
+        <div class="grid4 mb16">
+          <div class="stat-card"><div class="stat-num" style="color:var(--green);" id="stat-completes">—</div><div class="stat-lbl">Matières complètes</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--red);" id="stat-incompletes">—</div><div class="stat-lbl">Incomplètes</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--purple);" id="stat-eleves-total">—</div><div class="stat-lbl">Élèves actifs</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--red);" id="stat-eleves-difficile">—</div><div class="stat-lbl">En difficulté</div></div>
+        </div>
+        <div id="loading-msg" style="font-size:12px;color:var(--text2);margin-bottom:8px;">⏳ Chargement des données…</div>
+
+        <div class="section-label mb8">Alertes</div>
+        <div id="alertes-matieres"></div>
+      </div>
+
+      <div>
+        <div class="section-label mb8">Progression par matière</div>
+        <div class="card" id="barres-matieres"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== SUIVI ÉLÈVES =================== -->
+  <div class="panel" id="panel-eleves">
+    <div class="grid2">
+      <div>
+        <div class="section-label mb8">Élèves en difficulté</div>
+        <div class="card" id="eleves-difficile"><div style="font-size:13px;color:var(--text2);padding:8px;">⏳ Chargement…</div></div>
+      </div>
+      <div>
+        <div class="section-label mb8">Élèves au-dessus de 70%</div>
+        <div class="card" id="eleves-ok"><div style="font-size:13px;color:var(--text2);padding:8px;">⏳ Chargement…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== ENVOI RAPIDE =================== -->
+  <div class="panel" id="panel-envoi">
+    <div class="grid2">
+      <div>
+        <div class="section-label mb8">Via Telegram</div>
+        <a class="tg-btn" href="tg://resolve?domain=AssistantPedagoBot">
+          <div class="tg-icon" style="background:var(--teal-light);">🎤</div>
+          <div class="tg-text">
+            <div class="tg-lbl">Entrée vocale</div>
+            <div class="tg-sub">Ouvre @AssistantPedagoBot → envoie un message vocal</div>
+          </div>
+          <div class="tg-arrow">→</div>
+        </a>
+        <a class="tg-btn" href="tg://resolve?domain=AssistantPedagoBot">
+          <div class="tg-icon" style="background:var(--purple-light);">📷</div>
+          <div class="tg-text">
+            <div class="tg-lbl">Photo copie élève</div>
+            <div class="tg-sub">Ouvre @AssistantPedagoBot → photo + légende</div>
+          </div>
+          <div class="tg-arrow">→</div>
+        </a>
+      </div>
+      <div>
+        <div class="section-label mb8">Checklist avant envoi</div>
+        <div class="rappel">
+          <div class="rappel-title">⚠️ Rappel format</div>
+          <div class="rappel-line">Légende photo : <span class="code">Prénom Numéro</span> ex : <span class="code">Emma 3</span></div>
+          <div class="rappel-line">✔ Vérifier Configuration du cahier de cotes</div>
+          <div class="rappel-line">✔ Vérifier Configuration du sheet Forms</div>
+          <div class="rappel-line">✔ Envoyer une photo fraîche (le lien expire)</div>
+          <div class="divider"></div>
+          <div class="rappel-line rappel-warn">⚠ Modifier la Config AVANT la soumission des élèves</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== GÉNÉRATION =================== -->
+  <div class="panel" id="panel-generation">
+    <div class="grid4 mb20">
+      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
+        <div class="btn-icon" style="background:var(--green-light);">📝</div>
+        <div class="btn-lbl">Fiche d'exercices</div>
+        <div class="btn-sub">Ouvre le formulaire générateur</div>
+      </a>
+      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
+        <div class="btn-icon" style="background:var(--red-light);">📊</div>
+        <div class="btn-lbl">Évaluation</div>
+        <div class="btn-sub">Ouvre le formulaire générateur</div>
+      </a>
+      <a class="btn-action" href="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8TRpDC17FYTNDmtp_DWCqbRefu7jNV2MkBlBdsrOtb8myvg/formResponse" target="_blank">
+        <div class="btn-icon" style="background:var(--purple-light);">🎮</div>
+        <div class="btn-lbl">Quiz interactif HTML</div>
+        <div class="btn-sub">Génère un quiz pour les élèves</div>
+      </a>
+      <a class="btn-action" href="https://drive.google.com/drive/folders/1ujetkjdjPUn4hK2Lr3m6O6IUO1C7FW1t?hl=fr" target="_blank">
+        <div class="btn-icon" style="background:var(--orange-light);">📁</div>
+        <div class="btn-lbl">Voir les fiches</div>
+        <div class="btn-sub">Dossier "Fiches exercices" sur Drive</div>
+      </a>
+    </div>
+
+    <div class="section-label mb8">Checklist avant génération</div>
+    <div class="rappel">
+      <div class="rappel-title">✅ À vérifier</div>
+      <div class="rappel-line">✔ Choisir : matière · niveau · sujet · volume · type de production</div>
+      <div class="rappel-line">✔ Vérifier que le référentiel FWB correspondant existe dans Drive</div>
+      <div class="rappel-line">✔ Nommage référentiel : <span class="code">Synthèse - MATIERE - P5-P6</span></div>
+      <div class="divider"></div>
+      <div class="rappel-line rappel-warn">⚠ "Évaluation" avec É majuscule dans le formulaire</div>
+      <div class="rappel-line rappel-warn">⚠ Vérifier bulle verte {{26.A}} dans Make si problème</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(panel, tab) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('active');
+    tab.classList.add('active');
+  }
+
+  // =================== CONFIG ===================
+  const SHEET_ID = '1E76VB1aAHiSn1e2oJLhayudKO8u2CIeDLOTU-VcUrGk';
+  const API_KEY  = 'AIzaSyClf11c8lLLU06D5AuKgpp_DHL1aaeuKBQ';
+  const SEUIL    = 0.7;
+  const DATE_BULLETIN = new Date('2026-06-18');
+
+  const ONGLETS = [
+    'Savoir écouter','Savoir lire','Outils pour la langue',
+    'Savoir écrire','Nomb. & Op.','Grandeurs',
+    'Sol & Fig','Traitement données','Eveil Sciences','Eveil FHGES'
+  ];
+
+  // =================== DATE & BULLETIN ===================
+  const days   = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const now    = new Date();
+  document.getElementById('date-pill').textContent =
+    days[now.getDay()] + ' ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+  const joursRestants = Math.ceil((DATE_BULLETIN - now) / (1000*60*60*24));
+  const pill = document.getElementById('bulletin-pill');
+  if (joursRestants > 0) {
+    pill.textContent = '📅 Bulletin dans ' + joursRestants + ' jours';
+    pill.style.background = joursRestants < 14 ? 'var(--red-light)' : 'var(--orange-light)';
+    pill.style.color       = joursRestants < 14 ? 'var(--red)'      : 'var(--orange)';
+  } else {
+    pill.textContent = '📅 Bulletin passé';
+  }
+
+  // =================== SHEETS API ===================
+  async function fetchRange(onglet, range) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(onglet + '!' + range)}?key=${API_KEY}`;
+    const r = await fetch(url);
+    const d = await r.json();
+    return d.values || [];
+  }
+
+  // =================== ANALYSE ===================
+  async function loadData() {
+    document.getElementById('loading-msg').style.display = 'block';
+    try {
+      const results = await Promise.all(ONGLETS.map(o => fetchRange(o, 'A1:Z50')));
+      const matiereStats = [];
+      const eleveMap = {};
+
+      results.forEach((rows, idx) => {
+        const nomMatiere = ONGLETS[idx];
+        if (!rows || rows.length < 2) {
+          matiereStats.push({ nom: nomMatiere, encodees: 0, max: 0 });
+          return;
+        }
+        const maxRow = rows[1] ? rows[1].slice(1) : [];
+        const nbEvals = maxRow.filter(v => v && v.trim() !== '' && !isNaN(parseFloat(v))).length;
+
+        let evalsAvecCotes = 0;
+        for (let col = 0; col < nbEvals; col++) {
+          const hasCote = rows.slice(2).some(row => row[col+1] && row[col+1].trim() !== '' && !isNaN(parseFloat(row[col+1])));
+          if (hasCote) evalsAvecCotes++;
+        }
+        matiereStats.push({ nom: nomMatiere, encodees: evalsAvecCotes, max: nbEvals });
+
+        rows.slice(2).forEach(row => {
+          const prenomRaw = row[0] ? row[0].trim() : '';
+          if (!prenomRaw) return;
+          const prenom = prenomRaw.replace(/^\d+\s*-\s*/, '').trim();
+          if (!prenom) return;
+          if (!eleveMap[prenom]) eleveMap[prenom] = { points: 0, maxPoints: 0, matieresFaibles: [] };
+          let ptsMat = 0, maxMat = 0;
+          for (let col = 0; col < nbEvals; col++) {
+            const val = parseFloat(row[col+1]);
+            const mx  = parseFloat(maxRow[col]);
+            if (!isNaN(val) && !isNaN(mx) && mx > 0) { ptsMat += val; maxMat += mx; }
+          }
+          if (maxMat > 0) {
+            eleveMap[prenom].points    += ptsMat;
+            eleveMap[prenom].maxPoints += maxMat;
+            if (ptsMat / maxMat < SEUIL) eleveMap[prenom].matieresFaibles.push(nomMatiere);
+          }
+        });
+      });
+
+      renderMatieres(matiereStats);
+      renderEleves(eleveMap);
+      document.getElementById('loading-msg').style.display = 'none';
+    } catch(e) {
+      document.getElementById('loading-msg').textContent = '⚠ Erreur de chargement — vérifier la clé API et le partage du Sheets.';
+      console.error(e);
+    }
+  }
+
+  // =================== RENDER MATIÈRES ===================
+  function renderMatieres(stats) {
+    const completes   = stats.filter(s => s.max > 0 && s.encodees >= s.max).length;
+    const incompletes = stats.filter(s => s.encodees < s.max).length;
+    document.getElementById('stat-completes').textContent   = completes;
+    document.getElementById('stat-incompletes').textContent = incompletes;
+
+    const alertesEl = document.getElementById('alertes-matieres');
+    alertesEl.innerHTML = '';
+    stats.filter(s => s.encodees === 0).forEach(s => {
+      alertesEl.innerHTML += `<div class="alert-row al-danger"><div class="al-dot"></div><div class="al-content"><div class="al-title">${s.nom}</div><div class="al-sub">0/${s.max} cotes encodées — aucune évaluation</div></div></div>`;
+    });
+    stats.filter(s => s.encodees > 0 && s.encodees < s.max).forEach(s => {
+      const m = s.max - s.encodees;
+      alertesEl.innerHTML += `<div class="alert-row al-warn"><div class="al-dot"></div><div class="al-content"><div class="al-title">${s.nom}</div><div class="al-sub">${s.encodees}/${s.max} cotes — ${m} manquante${m>1?'s':''}</div></div></div>`;
+    });
+    const oksNames = stats.filter(s => s.max > 0 && s.encodees >= s.max).map(s => s.nom);
+    if (oksNames.length > 0) {
+      alertesEl.innerHTML += `<div class="alert-row al-ok"><div class="al-dot"></div><div class="al-content"><div class="al-title">${oksNames.length} matière${oksNames.length>1?'s':''} complète${oksNames.length>1?'s':''}</div><div class="al-sub">${oksNames.join(' · ')}</div></div></div>`;
+    }
+
+    const barresEl = document.getElementById('barres-matieres');
+    barresEl.innerHTML = '';
+    stats.forEach(s => {
+      const pct   = s.max > 0 ? Math.round((s.encodees / s.max) * 100) : 0;
+      const cls   = pct === 100 ? 'bar-ok' : pct === 0 ? 'bar-danger' : 'bar-warn';
+      const bcls  = pct === 100 ? 'b-ok'   : pct === 0 ? 'b-danger'   : 'b-warn';
+      const label = pct === 100 ? 'OK' : pct === 0 ? 'Vide' : `${s.max-s.encodees} manque${s.max-s.encodees>1?'s':''}`;
+      barresEl.innerHTML += `<div class="mat-row"><div class="mat-name">${s.nom}</div><div class="bar-wrap"><div class="bar ${cls}" style="width:${pct}%"></div></div><div class="score-txt">${s.encodees}/${s.max}</div><div class="badge ${bcls}">${label}</div></div>`;
+    });
+  }
+
+  // =================== RENDER ÉLÈVES ===================
+  function renderEleves(eleveMap) {
+    const eleves = Object.entries(eleveMap).map(([prenom, d]) => ({
+      prenom,
+      pct: d.maxPoints > 0 ? Math.round((d.points / d.maxPoints) * 100) : null,
+      faibles: d.matieresFaibles
+    })).filter(e => e.pct !== null).sort((a,b) => a.pct - b.pct);
+
+    const difficile = eleves.filter(e => e.pct < SEUIL * 100);
+    const ok        = eleves.filter(e => e.pct >= SEUIL * 100).reverse();
+
+    document.getElementById('stat-eleves-total').textContent     = eleves.length;
+    document.getElementById('stat-eleves-difficile').textContent = difficile.length;
+
+    function ini(p) { return p.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2); }
+
+    document.getElementById('eleves-difficile').innerHTML = difficile.length === 0
+      ? '<div style="padding:12px;font-size:13px;color:var(--text2);">Tous les élèves sont au-dessus du seuil 🎉</div>'
+      : difficile.map(e => `<div class="eleve-row"><div class="av" style="background:${e.pct<50?'var(--red-light)':'var(--orange-light)'};color:${e.pct<50?'var(--red)':'var(--orange)'};">${ini(e.prenom)}</div><div class="eleve-info"><div class="eleve-name">${e.prenom}</div><div class="eleve-detail">${e.faibles.length>0?e.faibles.join(' · '):'Score global faible'}</div></div><div class="eleve-score" style="color:${e.pct<50?'var(--red)':'var(--orange)'};">${e.pct}%</div></div>`).join('');
+
+    document.getElementById('eleves-ok').innerHTML =
+      ok.slice(0,6).map(e => `<div class="eleve-row"><div class="av" style="background:var(--green-light);color:var(--green);">${ini(e.prenom)}</div><div class="eleve-info"><div class="eleve-name">${e.prenom}</div><div class="eleve-detail">Toutes matières OK</div></div><div class="eleve-score" style="color:var(--green);">${e.pct}%</div></div>`).join('')
+      + (ok.length > 6 ? `<div style="padding-top:10px;font-size:12px;color:var(--text2);">+ ${ok.length-6} autres élèves au-dessus du seuil</div>` : '');
+  }
+
+  loadData();
+</script>
+</body>
+</html>
